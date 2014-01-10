@@ -15,13 +15,12 @@ rem See the License for the specific language governing permissions and
 rem limitations under the License.
 
 IF [%1] EQU [] (
-	echo "USAGE: $0 server.properties [consumer.properties producer.properties]"
-	goto :eof
+	echo USAGE: %0 server.properties
+	EXIT /B 1
 )
 
-IF [%JMX_PORT%] EQU [] (
-	echo Set JMX_PORT to default value : 9999
-	set JMX_PORT=9999
-)
-
-kafka-run-class.bat kafka.Kafka %*
+SetLocal
+set KAFKA_LOG4J_OPTS=-Dlog4j.configuration=file:~dp0../../config/log4j.properties
+set KAFKA_HEAP_OPTS=-Xmx1G -Xms1G
+%~dp0kafka-run-class.bat kafka.Kafka %*
+EndLocal
